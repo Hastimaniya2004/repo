@@ -1,0 +1,344 @@
+Tracking Files Lifecycle
+# Create file
+echo "Hello World" > app.txt
+# Check status
+git status
+# Stage and commit
+git add app.txt
+git commit -m "Add app.txt"
+# Modify file
+echo "New line added" >> app.txt
+# View changes
+git diff
+# Stage and commit updated changes
+git add app.txt
+git commit -m "Update app.txt with new line"
+# Create and switch to dev branch
+git branch dev
+git checkout dev
+# or: git switch dev
+# Make changes in dev
+echo "Dev branch change" >> app.txt
+git add app.txt
+git commit -m "Change in dev branch"
+# Switch back to main
+git checkout main
+# or: git switch main
+# Compare branches
+git diff main..dev
+git log main..dev
+
+=================================
+Branching and Isolation
+# Create dev branch
+git branch dev
+# Switch to dev branch
+git checkout dev
+# or: git switch dev
+# Make changes in dev branch
+echo "Changes in dev branch" >> app.txt
+git add app.txt
+git commit -m "Update in dev branch"
+# Switch back to main branch
+git checkout main
+# or: git switch main
+# Compare branches
+git diff main..dev
+git log main..dev
+
+===================================
+Merging and Conflict Handling
+# Switch to main branch
+git checkout main
+# or: git switch main
+# Merge dev into main (fast-forward if possible)
+git merge dev
+# ---- Create a conflict scenario ----
+# Switch to dev and make a change
+git checkout dev
+echo "Change from dev branch" > app.txt
+git add app.txt
+git commit -m "Dev change causing conflict"
+# Switch to main and make a different change
+git checkout main
+echo "Change from main branch" > app.txt
+git add app.txt
+git commit -m "Main change causing conflict"
+# Try merging dev into main (will cause conflict)
+git merge dev
+# ---- Resolve conflict manually ----
+# Open app.txt and edit to keep desired content
+# Remove conflict markers: <<<<<<< ======= >>>>>>>
+# Stage resolved file
+git add app.txt
+# Commit resolved merge
+git commit -m "Resolved merge conflict"
+
+================================================
+Working with Remote Repositories
+# Clone a remote repository (creates local copy)
+git clone https://github.com/username/repository.git
+# Navigate into the project
+cd repository
+# Check configured remotes
+git remote -v
+# Add a remote manually (if not already added)
+git remote add origin https://github.com/username/repository.git
+# Fetch updates from remote (does not merge)
+git fetch origin
+# Pull changes from remote (fetch + merge)
+git pull origin main
+# Make local changes
+echo "New change" >> app.txt
+git add app.txt
+git commit -m "Local update"
+# Push changes to remote repository
+git push origin main
+
+==================================================
+GitHub Collaboration Workflow
+# Initialize local repo (if not already done)
+git init
+# Add files and commit
+git add .
+git commit -m "Initial commit"
+# Add GitHub remote (after creating repo on GitHub)
+git remote add origin https://github.com/username/repository.git
+# Push local code to GitHub
+git branch -M main
+git push -u origin main
+# ---- Clone repo to another directory ----
+cd ..
+git clone https://github.com/username/repository.git
+cd repository
+# ---- Create feature branch ----
+git checkout -b feature-branch
+# or: git switch -c feature-branch
+# Make changes
+echo "Feature work" >> app.txt
+git add app.txt
+git commit -m "Add feature"
+# Push feature branch to GitHub
+git push origin feature-branch
+# ---- Create Pull Request (on GitHub UI) ----
+# Go to GitHub → Open repository → Compare & pull request → Create PR
+# ---- After review, merge Pull Request ----
+# Click "Merge pull request" on GitHub
+# ---- Update local main branch ----
+git checkout main
+git pull origin main
+
+=======================================================
+Undoing Changes & Recovery
+# Undo unstaged changes (restore file to last commit)
+git checkout -- app.txt
+# or: git restore app.txt
+# Unstage a file (keep changes in working directory)
+git reset app.txt
+# Amend last commit (modify message or add changes)
+git commit --amend -m "Updated commit message"
+# ---- Using git reset ----
+# Soft reset (keeps changes staged)
+git reset --soft HEAD~1
+# Mixed reset (default: keeps changes unstaged)
+git reset HEAD~1
+# Hard reset (removes all changes permanently)
+git reset --hard HEAD~1
+# ---- Safe undo using revert ----
+git revert HEAD
+# ---- Recover lost commits ----
+git reflog
+# Restore a commit from reflog
+git checkout <commit-hash>
+# or reset back to it
+git reset --hard <commit-hash>
+
+======================================================
+# -------- MERGING & CONFLICT HANDLING --------
+# Switch to main branch
+git checkout main
+# Merge dev into main (fast-forward if possible)
+git merge dev
+# ---- Create conflict scenario ----
+# Switch to dev and make change
+git checkout dev
+echo "Change from dev" > app.txt
+git add app.txt
+git commit -m "Dev change"
+# Switch to main and make different change
+git checkout main
+echo "Change from main" > app.txt
+git add app.txt
+git commit -m "Main change"
+# Merge dev into main (conflict occurs)
+git merge dev
+# Resolve conflict manually in app.txt
+# Remove <<<<<<< ======= >>>>>>>
+git add app.txt
+git commit -m "Resolved merge conflict"
+# -------- FEATURE BRANCH WORKFLOW --------
+# Create and switch to feature branch
+git checkout -b feature-branch
+# Make incremental commits
+echo "Feature work 1" >> app.txt
+git add app.txt
+git commit -m "Feature step 1"
+echo "Feature work 2" >> app.txt
+git add app.txt
+git commit -m "Feature step 2"
+# Push feature branch to remote
+git push origin feature-branch
+# Update feature branch with latest develop changes
+git checkout develop
+git pull origin develop
+git checkout feature-branch
+git merge develop
+# Resolve conflicts if any
+git add app.txt
+git commit -m "Merge develop into feature branch"
+# Merge feature branch back to develop
+git checkout develop
+git merge feature-branch
+# Push updated develop branch
+git push origin develop
+
+=======================================================
+# -------- LOCAL vs REMOTE REPOSITORIES --------
+# Clone a remote repository
+git clone https://github.com/username/repository.git
+cd repository
+# Check remotes
+git remote -v
+# Add remote manually (if needed)
+git remote add origin https://github.com/username/repository.git
+# Fetch updates (no merge)
+git fetch origin
+# Pull changes (fetch + merge)
+git pull origin main
+# Make local changes
+echo "New update" >> app.txt
+git add app.txt
+git commit -m "Local update"
+# Push changes to remote
+git push origin main
+# -------- UNDO / ROLLBACK & RECOVERY --------
+# View commit history to identify commit
+git log --oneline
+# Reset to previous commit (keep changes staged)
+git reset --soft HEAD~1
+# Reset to previous commit (keep changes unstaged)
+git reset HEAD~1
+# Reset to previous commit (discard all changes)
+git reset --hard HEAD~1
+# Discard unwanted changes in file
+git checkout -- app.txt
+# or: git restore app.txt
+# Revert commit safely (for shared branches)
+git revert HEAD
+# Verify rollback
+git status
+git log --oneline
+# Recover lost commits if needed
+git reflog
+git reset --hard <commit-hash>
+
+====================================================
+Git Hooks for Automation
+# -------- INITIALIZE REPO & BASIC LIFECYCLE --------
+# Initialize repository
+git init
+# Create a file
+echo "Hello World" > app.txt
+# Check status
+git status
+# Stage file
+git add app.txt
+# Commit changes
+git commit -m "Initial commit"
+# Modify file
+echo "New line added" >> app.txt
+# View difference
+git diff
+# Commit again
+git add app.txt
+git commit -m "Updated app.txt"
+# -------- GIT HOOKS FOR AUTOMATION --------
+# Go to hooks directory
+cd .git/hooks
+# -------- Pre-commit hook (lint check) --------
+# Create/edit pre-commit file
+echo '#!/bin/sh
+echo "Running lint check..."
+# Example: replace with real linter
+exit 0' > pre-commit
+# Make it executable
+chmod +x pre-commit
+# -------- Pre-push hook (run tests) --------
+echo '#!/bin/sh
+echo "Running tests before push..."
+# Example: replace with real test command
+exit 0' > pre-push
+chmod +x pre-push
+# -------- Post-merge hook --------
+echo '#!/bin/sh
+echo "Post-merge actions running..."
+# Example: install dependencies or build
+exit 0' > post-merge
+chmod +x post-merge
+# -------- BACK TO PROJECT ROOT --------
+cd ../..
+# Now hooks will run automatically on commit/push/merge
+
+=======================================================
+Initialize and Track Files
+# Initialize Git repository
+git init
+# Create a file
+echo "Hello World" > app.txt
+# Check repository status
+git status
+# Stage the file
+git add app.txt
+# Commit changes
+git commit -m "Initial commit"
+# Modify the file
+echo "New line added" >> app.txt
+# View differences
+git diff
+# Stage and commit again
+git add app.txt
+git commit -m "Updated app.txt"
+
+========================================
+Branching and Isolation
+# -------- BRANCHING & ISOLATION --------
+# Create dev branch
+git branch dev
+# Switch to dev branch
+git checkout dev
+# or: git switch dev
+# Make changes in dev
+echo "Change in dev branch" >> app.txt
+git add app.txt
+git commit -m "Update in dev branch"
+# Switch back to main
+git checkout main
+# or: git switch main
+# Compare branches
+git diff main..dev
+git log main..dev
+-- BRANCH CLEANUP --------
+# Delete local branch
+git branch -d dev
+# Force delete (if not merged)
+git branch -D dev
+# Delete remote branch
+git push origin --delete dev
+# Remove merged branches (cleanup)
+git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+# Clean unused remote-tracking branches
+git fetch --prune
+# Verify branch list
+git branch
+git branch -r
+git branch -a
